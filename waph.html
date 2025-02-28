@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WAPH Course</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .course-container {
+      margin-top: 50px;
+    }
+    .lab-section {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+    .lab-section h2 {
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="index.html">Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </nav>
+  
+  <div class="container course-container">
+    <h1 class="text-center">Web Application and Penetration Hacking (WAPH) Course</h1>
+    <p class="text-center">A comprehensive course on web security and ethical hacking techniques.</p>
+    
+    <!-- Lab-0: Development Environment -->
+    <div class="lab-section mt-5">
+      <h2>Lab-0: Setting Up My Development Environment</h2>
+      <p>In this lab, I set up my development environment using an online Ubuntu 22.04 Virtual Machine and a Bitbucket repository. Here are the steps I followed:</p>
+      <ol>
+        <li>I created a Bitbucket account if I didn’t already have one.</li>
+        <li>I logged in to the University of Dayton's online Ubuntu 22.04 LTS VM at <a href="https://RapidWindow" target="_blank">RapidWindow</a> using the credentials provided on the UD Network or through the VDI Gateway.</li>
+        <li>For an optional local setup, I installed <a href="https://www.virtualbox.org/" target="_blank">VirtualBox</a> and created a virtual machine running Ubuntu 22.04 LTS.</li>
+      </ol>
+    </div>
+    
+    <!-- Lab-1: Fundamental Web Principles -->
+    <div class="lab-section">
+      <h2>Lab-1: Fundamental Web Principles</h2>
+      <p>This report summarizes Lab 1, which addressed fundamental web principles with an emphasis on the HTTP protocol. During this lab, I covered the following topics:</p>
+      <ul>
+        <li>Basic web application programming using CGI in C and PHP.</li>
+        <li>Introduction to tools like Wireshark and Telnet for analyzing HTTP traffic.</li>
+        <li>Key concepts such as HTTP, network analysis, and the foundations of web development.</li>
+      </ul>
+      <p>This lab helped me gain a deeper understanding of how web applications function and how HTTP traffic can be analyzed using various tools.</p>
+    </div>
+    
+    <!-- Lab-2: Front-End Website Development -->
+    <div class="lab-section">
+      <h2>Lab-2: Front-End Website Development</h2>
+      <p>In this lab, I focused on developing front-end websites using HTML, CSS, JavaScript, jQuery, and AJAX. I created a file named <code>waph-pateld106.html</code>, where I implemented forms, dynamic content, and real-time updates. I used JavaScript to display the current date/time and built a digital clock that updates every second. I also integrated AJAX to handle GET and POST requests dynamically, using <code>XMLHttpRequest</code> and jQuery to communicate with <code>echo.php</code>. Additionally, I applied CSS to style the website and used jQuery to retrieve and display a random programming joke via a public API when the page loads. This lab significantly improved my skills in creating interactive and responsive web applications. It gave me hands-on experience with modern web technologies and reinforced my understanding of client-server communication.</p>
+    </div>
+
+    <!-- Hackathon 1: XSS Attacks and Defenses -->
+    <div class="lab-section">
+      <h2>Hackathon 1: XSS Attacks and Defenses</h2>
+      <p>This hackathon focused on Cross-Site Scripting (XSS) attacks and defenses, providing hands-on experience in both exploiting and securing web applications against XSS vulnerabilities. The tasks included:</p>
+      <h4>Attacks:</h4>
+      <ul>
+        <li>Exploited reflected XSS vulnerabilities across 7 levels (0-6) on the provided web application.</li>
+        <li>Injected payloads to display my name using <code>alert()</code> for each level.</li>
+        <li>Guessed server-side code vulnerabilities for levels 0-6 to understand how the exploits worked.</li>
+        <li>Demonstrated successful attacks with full URL screenshots and payload inspections.</li>
+      </ul>
+      <h4>Defenses:</h4>
+      <ul>
+        <li>Secured <code>echo.php</code> from Lab 1 by adding input validation and output encoding using <code>htmlentities()</code>.</li>
+        <li>Protected the front-end prototype from Lab 2 by identifying external input channels, validating incoming data, and encoding data before displaying it on the webpage.</li>
+        <li>Committed all secure code revisions to GitHub with detailed documentation.</li>
+      </ul>
+      <p>This exercise enhanced my understanding of both exploiting and defending against XSS vulnerabilities, equipping me with practical skills to secure web applications effectively.</p>
+    </div>
+  </div>
+  
+  <footer class="bg-dark text-white text-center py-3 mt-5">
+    <p>Contact: <a href="mailto:pateld106@udaydon.edu" class="text-white">pateld106@udaydon.edu</a></p>
+    <p>LinkedIn: <a href="https://www.linkedin.com/in/deval-lufy" target="_blank" class="text-white">linkedin.com/in/deval-lufy</a></p>
+  </footer>
+</body>
+</html>
