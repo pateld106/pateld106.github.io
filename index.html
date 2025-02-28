@@ -8,9 +8,8 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
     .profile-section {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
+      text-align: center;
+      margin-top: 20px;
     }
     .profile-section img {
       width: 150px;
@@ -18,12 +17,17 @@
       object-fit: cover;
       border-radius: 0;
     }
-    .profile-section h1 {
-      margin-top: 10px;
+    .content-box {
+      text-align: center;
+      padding: 20px;
+      border-radius: 8px;
+      background: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
     }
     canvas {
       display: block;
-      margin: 20px 0;
+      margin: auto;
     }
   </style>
 </head>
@@ -41,23 +45,23 @@
     </div>
   </nav>
 
-  <div class="container mt-5">
+  <div class="container mt-4">
     <div class="profile-section">
-      <img src="headshot.jpeg" alt="Headshot">
       <h1>Deval Patel</h1>
+      <img src="headshot.jpeg" alt="Headshot">
     </div>
 
-    <div class="mt-4">
+    <div class="content-box">
       <h2>About Me</h2>
       <p>I am a student at the University of Dayton, studying Computer Science...</p>
     </div>
 
-    <div class="mt-4">
+    <div class="content-box">
       <h2>Experience</h2>
       <p>I worked at Z-Web Solutions as a Front-End Developer from 2022 to 2023...</p>
     </div>
 
-    <div class="mt-4">
+    <div class="content-box">
       <h2>Skills</h2>
       <ul>
         <li>Python</li>
@@ -70,20 +74,16 @@
       </ul>
     </div>
 
-    <div class="mt-4">
-      <h3>Random Joke</h3>
-      <p id="joke">Fetching a joke...</p>
-    </div>
-
-    <div class="mt-4">
+    <div class="content-box">
       <h3>Digital Clock</h3>
       <p id="digit-clock">Loading time...</p>
     </div>
 
-    <div class="mt-4">
+    <div class="content-box">
       <h3>Analog Clock</h3>
       <canvas id="analog-clock"></canvas>
     </div>
+
   </div>
 
   <footer class="bg-dark text-white text-center py-3 mt-5">
@@ -92,17 +92,6 @@
   </footer>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      let lastVisit = localStorage.getItem("lastVisit");
-      let currentVisit = new Date().toString();
-      localStorage.setItem("lastVisit", currentVisit);
-      if (lastVisit) {
-          alert(`Welcome back! Last visit: ${lastVisit}`);
-      } else {
-          alert("Welcome to my profile page!");
-      }
-    });
-
     function displayTime() { 
       document.getElementById('digit-clock').innerHTML = "Current time: " + new Date().toLocaleTimeString(); 
     } 
@@ -111,7 +100,7 @@
 
     var canvas = document.getElementById("analog-clock");
     var ctx = canvas.getContext("2d");
-    canvas.width = canvas.height = 150;
+    canvas.width = canvas.height = 100;
     var radius = canvas.height / 2;
     ctx.translate(radius, radius);
     radius *= 0.90;
@@ -129,25 +118,38 @@
       ctx.fillStyle = 'white';
       ctx.fill();
       ctx.strokeStyle = '#333';
-      ctx.lineWidth = radius * 0.1;
+      ctx.lineWidth = radius * 0.05;
       ctx.stroke();
+      
       ctx.beginPath();
-      ctx.arc(0, 0, radius * 0.1, 0, 2 * Math.PI);
+      ctx.arc(0, 0, radius * 0.05, 0, 2 * Math.PI);
       ctx.fillStyle = '#333';
       ctx.fill();
     }
 
     function drawNumbers(ctx, radius) {
+      ctx.font = radius * 0.15 + "px Arial";
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "center";
+
       for (let num = 1; num <= 12; num++) {
         let ang = num * Math.PI / 6;
-        ctx.rotate(ang);
-        ctx.translate(0, -radius * 0.85);
-        ctx.rotate(-ang);
-        ctx.fillText(num.toString(), 0, 0);
-        ctx.rotate(ang);
-        ctx.translate(0, radius * 0.85);
-        ctx.rotate(-ang);
+        let x = Math.cos(ang) * (radius * 0.85);
+        let y = Math.sin(ang) * (radius * 0.85);
+        ctx.fillText(num.toString(), x, y);
       }
+    }
+
+    function drawHand(ctx, pos, length, width, color = "black") {
+      ctx.beginPath();
+      ctx.lineWidth = width;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = color;
+      ctx.moveTo(0, 0);
+      ctx.rotate(pos);
+      ctx.lineTo(0, -length);
+      ctx.stroke();
+      ctx.rotate(-pos);
     }
 
     function drawTime(ctx, radius) {
@@ -155,12 +157,16 @@
       let hour = now.getHours() % 12;
       let minute = now.getMinutes();
       let second = now.getSeconds();
-      drawHand(ctx, (hour * Math.PI / 6) + (minute * Math.PI / 360), radius * 0.5, radius * 0.07);
-      drawHand(ctx, (minute * Math.PI / 30), radius * 0.8, radius * 0.07);
-      drawHand(ctx, (second * Math.PI / 30), radius * 0.9, radius * 0.02, "red");
+
+      let hourAngle = (hour * Math.PI / 6) + (minute * Math.PI / 360);
+      let minuteAngle = (minute * Math.PI / 30) + (second * Math.PI / 1800);
+      let secondAngle = (second * Math.PI / 30);
+
+      drawHand(ctx, hourAngle, radius * 0.5, radius * 0.07);
+      drawHand(ctx, minuteAngle, radius * 0.8, radius * 0.05);
+      drawHand(ctx, secondAngle, radius * 0.9, radius * 0.02, "red");
     }
   </script>
+
 </body>
 </html>
-
-
