@@ -29,6 +29,26 @@
       display: block;
       margin: auto;
     }
+    /* Popup styling */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .popup-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
   </style>
 </head>
 <body>
@@ -84,6 +104,19 @@
       <canvas id="analog-clock"></canvas>
     </div>
 
+    
+    <div class="content-box">
+      <h3>Random Joke</h3>
+      <p id="joke">Loading joke...</p>
+      <button id="get-joke" class="btn btn-primary">Get Another Joke</button>
+    </div>
+
+    
+    <div class="content-box">
+      <h3>Current Weather</h3>
+      <p id="weather-info">Loading...</p>
+    </div>
+
   </div>
 
   <footer class="bg-dark text-white text-center py-3 mt-5">
@@ -91,20 +124,31 @@
     <p>LinkedIn: <a href="https://www.linkedin.com/in/deval-lufy" target="_blank" class="text-white">linkedin.com/in/deval-lufy</a></p>
   </footer>
 
+  
+  <div id="welcomePopup" class="popup">
+    <div class="popup-content">
+      <h4>DEVAL SAYS</h4>
+      <p id="welcomeMessage"></p>
+      <button id="closePopup">OK</button>
+    </div>
+  </div>
+
   <script>
+    
     function displayTime() { 
       document.getElementById('digit-clock').innerHTML = "Current time: " + new Date().toLocaleTimeString(); 
     } 
     setInterval(displayTime, 500);
     displayTime();
 
+    
     var canvas = document.getElementById("analog-clock");
     var ctx = canvas.getContext("2d");
     canvas.width = canvas.height = 100;
     var radius = canvas.height / 2;
-    ctx.translate(radius, radius);
-    radius *= 0.90;
-    setInterval(drawClock, 1000);
+    ctx.translate(radius, radius); // Move the origin to the center of the canvas
+    radius *= 0.90; // Adjust the radius for better fit
+    setInterval(drawClock, 1000); // Update the clock every second
 
     function drawClock() {
       drawFace(ctx, radius);
@@ -120,9 +164,8 @@
       ctx.strokeStyle = '#333';
       ctx.lineWidth = radius * 0.05;
       ctx.stroke();
-      
       ctx.beginPath();
-      ctx.arc(0, 0, radius * 0.05, 0, 2 * Math.PI);
+      ctx.arc(0, 0, radius * 0.05, 0, 2 * Math.PI); // Draw center of the clock
       ctx.fillStyle = '#333';
       ctx.fill();
     }
@@ -131,7 +174,6 @@
       ctx.font = radius * 0.15 + "px Arial";
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
-
       for (let num = 1; num <= 12; num++) {
         let ang = num * Math.PI / 6;
         let x = Math.cos(ang) * (radius * 0.85);
@@ -157,15 +199,70 @@
       let hour = now.getHours() % 12;
       let minute = now.getMinutes();
       let second = now.getSeconds();
-
       let hourAngle = (hour * Math.PI / 6) + (minute * Math.PI / 360);
       let minuteAngle = (minute * Math.PI / 30) + (second * Math.PI / 1800);
       let secondAngle = (second * Math.PI / 30);
-
-      drawHand(ctx, hourAngle, radius * 0.5, radius * 0.07);
-      drawHand(ctx, minuteAngle, radius * 0.8, radius * 0.05);
-      drawHand(ctx, secondAngle, radius * 0.9, radius * 0.02, "red");
+      drawHand(ctx, hourAngle, radius * 0.5, radius * 0.07); // Hour hand
+      drawHand(ctx, minuteAngle, radius * 0.8, radius * 0.05); // Minute hand
+      drawHand(ctx, secondAngle, radius * 0.9, radius * 0.02, "red"); // Second hand
     }
+
+    
+    document.getElementById("get-joke").addEventListener("click", fetchJoke);
+
+    function fetchJoke() {
+      fetch("https://icanhazdadjoke.com/", {
+        headers: {
+          Accept: "application/json"
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('joke').innerText = data.joke;
+      })
+      .catch(error => {
+        document.getElementById('joke').innerText = "Oops! Something went wrong. Please try again.";
+      });
+    }
+
+   
+    fetchJoke();
+
+    
+    document.addEventListener("DOMContentLoaded", function () {
+      let lastVisit = localStorage.getItem("lastVisit");
+      let welcomeMessage = "Welcome!";
+      if (lastVisit) {
+        welcomeMessage = `Welcome back! Last visit: ${new Date(lastVisit).toLocaleString()}`;
+      }
+      document.getElementById("welcomeMessage").innerText = welcomeMessage;
+      document.getElementById("welcomePopup").style.display = "flex";
+      document.getElementById("closePopup").addEventListener("click", function () {
+        document.getElementById("welcomePopup").style.display = "none";
+        localStorage.setItem("lastVisit", new Date());
+      });
+    });
+
+    
+    const apiKey = 'YOUR_WEATHERBIT_API_KEY'; // Replace with your actual API key
+    const city = 'Dayton'; // Replace with your desired city
+    fetch(`https://api.weatherbit.io/v2.0/current?city=${city}&key=${apiKey}`)
+      .then(response => response.json())
+      .then(data => {
+        const weather = data.data[0];
+        const tempCelsius = weather.temp; // Temperature in Celsius
+        const tempFahrenheit = (tempCelsius * 9/5) + 32; // Convert to Fahrenheit
+        const description = weather.weather.description; // Weather description
+        document.getElementById('weather-info').innerHTML = `
+          <strong>City:</strong> ${city}<br>
+          <strong>Temperature:</strong> ${tempCelsius}°C (${tempFahrenheit.toFixed(1)}°F)<br>
+          <strong>Conditions:</strong> ${description}
+        `;
+      })
+      .catch(error => {
+        console.error('Error fetching weather data:', error);
+        document.getElementById('weather-info').innerHTML = "Unable to load weather data.";
+      });
   </script>
 
 </body>
